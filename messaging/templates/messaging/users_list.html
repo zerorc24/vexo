@@ -1,0 +1,26 @@
+{% extends "messaging/base_dm.html" %}
+
+{% block sidebar %}
+
+{% for user in users %}
+
+<a href="{% url 'start_chat' user.id %}" style="text-decoration:none;color:white;">
+
+    <div class="user">
+
+        <div class="avatar">
+            {{ user.username|first|upper }}
+        </div>
+
+        <div class="meta">
+            <div>{{ user.username }}</div>
+            <small>Tap to chat</small>
+        </div>
+
+    </div>
+
+</a>
+
+{% endfor %}
+
+{% endblock %}

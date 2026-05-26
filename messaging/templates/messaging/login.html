@@ -1,0 +1,150 @@
+{% extends "messaging/base_dm.html" %}
+
+{% block sidebar %}
+{% endblock %}
+
+{% block content %}
+<style>
+    .sidebar { display: none; }
+    .chat { flex: 1; display: flex; align-items: center; justify-content: center; }
+
+    .login-card {
+        max-width: 420px;
+        width: 100%;
+        padding: 36px;
+        border-radius: 32px;
+        background: rgba(12, 18, 26, 0.92);
+        backdrop-filter: blur(18px);
+        border: 1px solid rgba(255, 255, 255, 0.08);
+        box-shadow: 0 20px 60px rgba(0, 0, 0, 0.35);
+    }
+
+    .login-card h2 {
+        margin-bottom: 24px;
+        font-size: 32px;
+        color: var(--text);
+        text-align: center;
+    }
+
+    .login-card .subtitle {
+        margin-bottom: 30px;
+        color: var(--muted);
+        text-align: center;
+        line-height: 1.5;
+    }
+
+    .login-card form {
+        display: grid;
+        gap: 18px;
+    }
+
+    .login-card label {
+        display: block;
+        margin-bottom: 8px;
+        font-size: 13px;
+        color: var(--muted);
+    }
+
+    .login-card input {
+        width: 100%;
+        padding: 16px 18px;
+        border-radius: 16px;
+        border: 1px solid rgba(255, 255, 255, 0.08);
+        background: rgba(255, 255, 255, 0.05);
+        color: var(--text);
+        font-size: 14px;
+        outline: none;
+    }
+
+    .login-card input:focus {
+        border-color: rgba(16, 215, 181, 0.9);
+        box-shadow: 0 0 0 4px rgba(16, 215, 181, 0.08);
+        background: rgba(255, 255, 255, 0.08);
+    }
+
+    .login-card button {
+        padding: 14px 18px;
+        border: none;
+        border-radius: 16px;
+        font-weight: 700;
+        background: linear-gradient(135deg, var(--accent), var(--accent2));
+        color: #000;
+        cursor: pointer;
+    }
+
+    .login-card .error-box,
+    .login-card .errors {
+        background: rgba(255, 70, 70, 0.08);
+        border: 1px solid rgba(255, 70, 70, 0.2);
+        border-radius: 16px;
+        padding: 12px 14px;
+        color: #ff8f8f;
+        font-size: 14px;
+        line-height: 1.5;
+    }
+
+    .login-card .footer {
+        margin-top: 22px;
+        text-align: center;
+        color: var(--muted);
+        font-size: 14px;
+    }
+
+    .login-card .footer a {
+        color: var(--accent2);
+        text-decoration: none;
+        font-weight: 700;
+    }
+
+    @media(max-width: 640px) {
+        .chat { padding: 24px; }
+        .login-card { width: 100%; }
+    }
+</style>
+
+<div class="login-card">
+    <h2>Welcome Back</h2>
+    <div class="subtitle">Login to Vexo and continue chatting instantly.</div>
+
+    <form method="POST">
+        {% csrf_token %}
+        {% if next %}
+            <input type="hidden" name="next" value="{{ next }}">
+        {% endif %}
+
+        {% if form.non_field_errors %}
+            <div class="errors">{{ form.non_field_errors|striptags }}</div>
+        {% endif %}
+
+        <div>
+            <label for="{{ form.username.id_for_label }}">Username</label>
+            {{ form.username }}
+            {% if form.username.errors %}
+                <div class="error-box">
+                    {% for error in form.username.errors %}
+                        <div>{{ error }}</div>
+                    {% endfor %}
+                </div>
+            {% endif %}
+        </div>
+
+        <div>
+            <label for="{{ form.password.id_for_label }}">Password</label>
+            {{ form.password }}
+            {% if form.password.errors %}
+                <div class="error-box">
+                    {% for error in form.password.errors %}
+                        <div>{{ error }}</div>
+                    {% endfor %}
+                </div>
+            {% endif %}
+        </div>
+
+        <button type="submit">Login</button>
+    </form>
+
+    <div class="footer">
+        Don’t have an account? <a href="{% url 'register' %}">Create Account</a>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,134 @@
+{% extends "messaging/base_dm.html" %}
+
+{% block title %}Chats{% endblock %}
+
+<!-- SIDEBAR -->
+{% block sidebar %}
+
+<div class="sidebar-header">
+
+    <h3 style="color:white;margin-bottom:10px;">Messages</h3>
+
+    <input
+        type="text"
+        id="search"
+        placeholder="Search users..."
+        style="
+            width:100%;
+            padding:12px;
+            border-radius:12px;
+            border:none;
+            outline:none;
+            background:#182330;
+            color:white;
+        "
+    >
+
+</div>
+
+<div class="user-list">
+
+    {% for user in users %}
+
+        <a href="{% url 'start_chat' user.id %}" class="user-card">
+
+            <div class="avatar">
+                {{ user.username|first|upper }}
+            </div>
+
+            <div class="user-info">
+
+                <div class="name">
+                    {{ user.username }}
+                </div>
+
+                <div class="status">
+                    {% if user.profile.online %}
+                        🟢 Online
+                    {% else %}
+                        ⚫ Offline
+                    {% endif %}
+                </div>
+
+            </div>
+
+        </a>
+
+    {% empty %}
+
+        <div style="padding:20px;color:#8696a0;">
+            No users found
+        </div>
+
+    {% endfor %}
+
+</div>
+
+{% endblock %}
+
+<!-- MAIN CONTENT -->
+{% block content %}
+
+<div class="empty-state">
+
+    <h1>Welcome to Vexo</h1>
+
+    <p>
+        Select a user from the sidebar to start chatting in real-time.
+        Messages will appear instantly once connected.
+    </p>
+
+</div>
+
+{% endblock %}
+
+{% block extra_js %}
+
+<script>
+
+/* -----------------------------
+   SEARCH USERS (optimized)
+------------------------------*/
+
+const search = document.getElementById("search");
+const userCards = document.querySelectorAll(".user-card");
+
+search.addEventListener("input", function () {
+
+    const value = this.value.toLowerCase().trim();
+
+    userCards.forEach(card => {
+
+        const nameEl = card.querySelector(".name");
+        const name = nameEl ? nameEl.innerText.toLowerCase() : "";
+
+        if (name.includes(value)) {
+            card.style.display = "flex";
+        } else {
+            card.style.display = "none";
+        }
+
+    });
+
+});
+
+/* -----------------------------
+   FUTURE READY: typing search delay
+------------------------------*/
+
+let searchTimeout;
+
+search.addEventListener("keyup", function () {
+
+    clearTimeout(searchTimeout);
+
+    searchTimeout = setTimeout(() => {
+        // you can later connect backend search here (AJAX)
+        console.log("searching:", search.value);
+    }, 300);
+
+});
+
+</script>
+
+{% endblock %}

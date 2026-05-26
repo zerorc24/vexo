@@ -1,0 +1,1 @@
+web: gunicorn vexo.asgi:application -k uvicorn.workers.UvicornWorker
