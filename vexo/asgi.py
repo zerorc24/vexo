@@ -5,7 +5,7 @@ from channels.auth import AuthMiddlewareStack
 
 import messaging.routing
 
-os.environ.setdefault("DJANGO_SETTINGS_MODULE", "Vexo.settings")
+os.environ.setdefault("DJANGO_SETTINGS_MODULE", "vexo.settings")
 
 django_asgi_app = get_asgi_application()
 
