@@ -1,5 +1,6 @@
 import os
 from pathlib import Path
+import dj_database_url
 
 BASE_DIR = Path(__file__).resolve().parent.parent
 
@@ -36,14 +37,11 @@ INSTALLED_APPS = [
 ASGI_APPLICATION = "vexo.asgi.application"
 
 # =========================
-# CHANNEL LAYERS (PRODUCTION)
+# CHANNEL LAYERS (STABLE MODE)
 # =========================
 CHANNEL_LAYERS = {
     "default": {
-        "BACKEND": "channels_redis.core.RedisChannelLayer",
-        "CONFIG": {
-            "hosts": [os.environ.get("REDIS_URL", "redis://localhost:6379")],
-        },
+        "BACKEND": "channels.layers.InMemoryChannelLayer",
     },
 }
 
@@ -85,10 +83,8 @@ TEMPLATES = [
 WSGI_APPLICATION = "vexo.wsgi.application"
 
 # =========================
-# DATABASE (POSTGRES READY)
+# DATABASE
 # =========================
-import dj_database_url
-
 DATABASES = {
     "default": dj_database_url.config(
         default=f"sqlite:///{BASE_DIR / 'db.sqlite3'}"
