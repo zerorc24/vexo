@@ -93,6 +93,7 @@ html, body {
     border-radius: 12px;
     text-decoration: none;
     color: #94a3b8;
+    transition: 0.2s;
 }
 
 .nav a:hover,
@@ -115,6 +116,7 @@ html, body {
     border-radius: 12px;
     text-decoration: none;
     color: white;
+    transition: 0.2s;
 }
 
 .chat-item:hover {
@@ -130,6 +132,7 @@ html, body {
     justify-content: center;
     align-items: center;
     font-weight: bold;
+    flex-shrink: 0;
 }
 
 /* ================= MAIN ================= */
@@ -157,11 +160,23 @@ html, body {
     padding: 15px;
 }
 
+/* BUTTON */
+button {
+    border: none;
+    outline: none;
+    cursor: pointer;
+    background: transparent;
+    color: white;
+    font-size: 18px;
+}
+
 /* ================= MOBILE ================= */
 @media(max-width:768px) {
+
     .sidebar {
         position: fixed;
         left: -100%;
+        top: 0;
         height: 100%;
         z-index: 1000;
     }
@@ -169,6 +184,11 @@ html, body {
     .sidebar.show {
         left: 0;
     }
+
+    .sidebar.collapsed {
+        width: 280px;
+    }
+
 }
 
 /* ================= SCROLLBAR ================= */
@@ -184,13 +204,14 @@ html, body {
 </style>
 
 {% block extra_css %}{% endblock %}
+
 </head>
 
 <body>
 
 <div class="app">
 
-    <!-- SIDEBAR -->
+    <!-- ================= SIDEBAR ================= -->
     <aside class="sidebar">
 
         <div class="top">
@@ -206,10 +227,11 @@ html, body {
 
         </div>
 
-        <!-- NAV -->
+        <!-- ================= NAVIGATION ================= -->
         <div class="nav">
 
-            <a href="{% url 'chat_list' %}" class="{% if request.resolver_match.url_name == 'chat_list' %}active{% endif %}">
+            <a href="{% url 'chat_list' %}"
+               class="{% if request.resolver_match.url_name == 'chat_list' %}active{% endif %}">
                 <i class="fa fa-comments"></i>
                 <span class="hide">Chats</span>
             </a>
@@ -226,14 +248,14 @@ html, body {
 
         </div>
 
-        <!-- CHAT LIST -->
+        <!-- ================= CHAT LIST ================= -->
         <div class="chat-list">
             {% block sidebar %}{% endblock %}
         </div>
 
     </aside>
 
-    <!-- MAIN -->
+    <!-- ================= MAIN ================= -->
     <main class="main">
 
         <div class="header">
@@ -250,25 +272,46 @@ html, body {
 
 <!-- ================= SIDEBAR TOGGLE ================= -->
 <script>
+
 function toggleSidebar(){
-    document.querySelector(".sidebar").classList.toggle("collapsed");
+
+    const sidebar = document.querySelector(".sidebar");
+
+    if(window.innerWidth <= 768){
+        sidebar.classList.toggle("show");
+    } else {
+        sidebar.classList.toggle("collapsed");
+    }
+
 }
+
 </script>
 
 <!-- ================= PWA SERVICE WORKER ================= -->
 <script>
+
 if ('serviceWorker' in navigator) {
+
     window.addEventListener('load', function() {
+
         navigator.serviceWorker.register('/static/sw.js')
+
         .then(function(registration) {
             console.log('SW registered:', registration.scope);
         })
+
         .catch(function(error) {
             console.log('SW failed:', error);
         });
+
     });
+
 }
+
 </script>
+
+<!-- ================= EXTRA PAGE JS ================= -->
+{% block extra_js %}{% endblock %}
 
 </body>
 </html>
